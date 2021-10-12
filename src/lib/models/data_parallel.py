@@ -1,11 +1,11 @@
 import torch
 from torch.nn.modules import Module
-from torch.nn.parallel.scatter_gather import gather
-from torch.nn.parallel.replicate import replicate
 from torch.nn.parallel.parallel_apply import parallel_apply
-
+from torch.nn.parallel.replicate import replicate
+from torch.nn.parallel.scatter_gather import gather
 
 from .scatter_gather import scatter_kwargs
+
 
 class _DataParallel(Module):
     r"""Implements data parallelism at the module level.
@@ -64,7 +64,8 @@ class _DataParallel(Module):
     def forward(self, *inputs, **kwargs):
         if not self.device_ids:
             return self.module(*inputs, **kwargs)
-        inputs, kwargs = self.scatter(inputs, kwargs, self.device_ids, self.chunk_sizes)
+        inputs, kwargs = self.scatter(
+            inputs, kwargs, self.device_ids, self.chunk_sizes)
         if len(self.device_ids) == 1:
             return self.module(*inputs[0], **kwargs[0])
         replicas = self.replicate(self.module, self.device_ids[:len(inputs)])
@@ -108,13 +109,15 @@ def data_parallel(module, inputs, device_ids=None, output_device=None, dim=0, mo
     if output_device is None:
         output_device = device_ids[0]
 
-    inputs, module_kwargs = scatter_kwargs(inputs, module_kwargs, device_ids, dim)
+    inputs, module_kwargs = scatter_kwargs(
+        inputs, module_kwargs, device_ids, dim)
     if len(device_ids) == 1:
         return module(*inputs[0], **module_kwargs[0])
     used_device_ids = device_ids[:len(inputs)]
     replicas = replicate(module, used_device_ids)
     outputs = parallel_apply(replicas, inputs, module_kwargs, used_device_ids)
     return gather(outputs, output_device, dim)
+
 
 def DataParallel(module, device_ids=None, output_device=None, dim=0, chunk_sizes=None):
     if chunk_sizes is None:

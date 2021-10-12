@@ -1,12 +1,11 @@
 #!/usr/bin/env python
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import division
+from __future__ import absolute_import, division, print_function
 
 import torch
 from torch.autograd import Function
 
 from ._ext import dcn_v2 as _backend
+
 # from _ext import dcn_v2_double as _backend
 
 

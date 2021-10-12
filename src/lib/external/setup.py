@@ -1,11 +1,12 @@
-import numpy
 from distutils.core import setup
 from distutils.extension import Extension
+
+import numpy
 from Cython.Build import cythonize
 
 extensions = [
     Extension(
-        "nms", 
+        "nms",
         ["nms.pyx"],
         extra_compile_args=["-Wno-cpp", "-Wno-unused-function"]
     )

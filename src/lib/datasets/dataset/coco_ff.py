@@ -10,7 +10,7 @@ from pycocotools.cocoeval import COCOeval
 
 
 class COCO(data.Dataset):
-    num_classes = 80
+    num_classes = 6
     default_resolution = [512, 512]
     mean = np.array([0.40789654, 0.44719302, 0.47026115],
                     dtype=np.float32).reshape(1, 1, 3)

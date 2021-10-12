@@ -1,7 +1,7 @@
 import os
+
 import torch
 from torch.utils.ffi import create_extension
-
 
 sources = ['src/dcn_v2_double.c']
 headers = ['src/dcn_v2_double.h']
